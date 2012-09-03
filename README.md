@@ -8,47 +8,43 @@ Gatekeeper is a service that lets you temporarily mark an environment as locked 
 Usage
 -----
 
-### List all environments and their lock status
+### List all environment locks
 
 ```
-GET /
+GET /locks/
 ```
-
-#### Parameters
-**type**  
-`all`, `locked`, `unlocked`. Default `all`.
 
 #### Response
 Status **200 OK**
 
 ```
 {
-  "environments": [
+  "locks": [
     {
-      "theglitch": {
-        "locked": false 
-      }
-    },
+      "environment": "acct-dev", 
+      "owner": "mwarkentin", 
+      "message": "Testing CDN", 
+      "since": "2012-09-03 16:10:29.165004"
+    }, 
     {
-      "staging": {
-        "locked": false 
-      }
-    },
+      "environment": "acct-stage", 
+      "owner": "dlanger", 
+      "message": "Testing weekly email fix branch", 
+      "since": "2012-09-03 15:53:46.717481"
+    }, 
     {
-      "production": {
-      	"locked": true,
-      	"locked_by": "mwarkentin",
-      	"time": <datetime>,
-  		"message": "Testing branch email-weekly-fix"
-      }
+      "environment": "acct-prod", 
+      "owner": "dlanger", 
+      "message": "Testing weekly email fix branch", 
+      "since": "2012-09-03 15:52:52.008120"
     }
   ]
 }
 ```
 
-### Get the status of a single environment
+### Get the status of a single environment lock
 ```
-GET /:environment/
+GET /locks/:environment/
 ```
 
 #### Response
@@ -56,24 +52,19 @@ Status **200 OK**
 
 ```
 {
-  "environment": "production",
-  "locked": true,
-  "locked_by": "dlanger",
-  "time": <datetime>,
-  "message": "Locked to test branch email-weekly-fix"
+  "environment": "acct-stage", 
+  "owner": "dlanger", 
+  "message": "Testing weekly email fix branch", 
+  "since": "2012-09-03 15:53:46.717481"
 }
 ```
 
-```
-{
-  "environment": "theglitch",
-  "locked": false
-}
-```
+#### No such environment response
+Status **404 Not Found**
 
 ### Lock an environment
 ```
-POST /:environment/lock/
+POST /locks/:environment/
 ```
 
 #### Parameters
@@ -82,9 +73,6 @@ POST /:environment/lock/
 
 **message**  
 *Optional* **string** - Description of why the environment has been locked.
-
-**force**  
-*Optional* **boolean** - If true, lock an environment even if someone else has already locked it.
 
 ```
 {
@@ -98,48 +86,24 @@ Status **200 OK**
 
 ```
 {
-  "environment": "staging",
-  "locked": true,
-  "locked_by": "mwarkentin",
-  "time", <datetime>,
-  "message": "Testing CDN"
+  'environment': 'acct-dev', 
+  'owner': 'mwarkentin', 
+  'message': 'Testing CDN', 
+  'since': '2012-09-03 16:10:29.165004'
 }
 ```
 
 #### Already locked response
 Status **409 Conflict**
 
-```
-{
-  "environment": "staging",
-  "locked": true,
-  "locked_by": "dlanger",
-  "time", <datetime>,
-  "message": "Testing branch email-weekly-fix"
-}
-```
 
 ### Unlock an environment
 ```
-DEL /:environment/lock/
+DELETE /locks/:environment/
 ```
-
-#### Parameters
-**user**  
-*Required* **string** - User who unlocked the environment.
-
-**force**  
-*Optional* **boolean** - If true, unlock an environment even if you don't own the lock.
 
 #### Successful response
 Status **200 OK**
-
-```
-{
-  "environment": "staging",
-  "locked": false
-}
-```
 
 #### Already unlocked response
 Status **404 Not Found**
