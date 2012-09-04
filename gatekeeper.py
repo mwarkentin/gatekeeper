@@ -2,9 +2,11 @@ import os
 import urlparse
 from datetime import datetime
 
+from flask import Flask, abort, jsonify, request
 from redis import StrictRedis
 
-from flask import Flask, abort, jsonify, request
+from decorators import token_required
+
 app = Flask(__name__)
 
 HEROKU = 'HEROKU' in os.environ
@@ -30,6 +32,7 @@ def all_locks():
 
 
 @app.route('/locks/<env>/', methods=['GET', 'POST', 'DELETE'])
+@token_required
 def environment_lock(env):
     if request.method == 'GET':
         if redis.exists(env):
