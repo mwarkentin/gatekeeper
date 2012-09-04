@@ -41,9 +41,9 @@ def environment_lock(env):
                 abort(409)
         else:
             redis.hset(env, 'environment', env)
-            redis.hset(env, 'owner', request.form['user'])
+            redis.hset(env, 'owner', request.json.get('user'))
             redis.hset(env, 'since', datetime.now())
-            redis.hset(env, 'message', request.form.get('message'))
+            redis.hset(env, 'message', request.json.get('message'))
             return jsonify(redis.hgetall(env))
     if request.method == 'DELETE':
         if redis.exists(env):
