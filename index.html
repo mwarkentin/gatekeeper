@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Gatekeeper : Gatekeeper is a service that lets you mark an environment as locked for deployment." />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Gatekeeper</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/mwarkentin/gatekeeper">View on GitHub</a>
+
+          <h1 id="project_title">Gatekeeper</h1>
+          <h2 id="project_tagline">Gatekeeper is a service that lets you mark an environment as locked for deployment.</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/mwarkentin/gatekeeper/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/mwarkentin/gatekeeper/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>gatekeeper</h1>
+
+<p>Gatekeeper is a service that lets you temporarily mark an environment as locked for deployment.</p>
+
+<p><img src="http://f.cl.ly/items/1d432U1P130t1v0d1h2d/Gate%2520keeper.jpeg" alt="Gatekeeper"></p>
+
+<h2>Usage</h2>
+
+<h3>List all environment locks</h3>
+
+<pre><code>GET /locks/
+</code></pre>
+
+<h4>Response</h4>
+
+<p>Status <strong>200 OK</strong></p>
+
+<pre><code>{
+  "locks": [
+    {
+      "environment": "acct-dev", 
+      "owner": "mwarkentin", 
+      "message": "Testing CDN", 
+      "since": "2012-09-03 16:10:29.165004"
+    }, 
+    {
+      "environment": "acct-stage", 
+      "owner": "dlanger", 
+      "message": "Testing weekly email fix branch", 
+      "since": "2012-09-03 15:53:46.717481"
+    }, 
+    {
+      "environment": "acct-prod", 
+      "owner": "dlanger", 
+      "message": "Testing weekly email fix branch", 
+      "since": "2012-09-03 15:52:52.008120"
+    }
+  ]
+}
+</code></pre>
+
+<h3>Get the status of a single environment lock</h3>
+
+<pre><code>GET /locks/:environment/
+</code></pre>
+
+<h4>Response</h4>
+
+<p>Status <strong>200 OK</strong></p>
+
+<pre><code>{
+  "environment": "acct-stage", 
+  "owner": "dlanger", 
+  "message": "Testing weekly email fix branch", 
+  "since": "2012-09-03 15:53:46.717481"
+}
+</code></pre>
+
+<h4>No such environment response</h4>
+
+<p>Status <strong>404 Not Found</strong></p>
+
+<h3>Lock an environment</h3>
+
+<pre><code>POST /locks/:environment/
+</code></pre>
+
+<h4>Parameters</h4>
+
+<p><strong>user</strong><br><em>Required</em> <strong>string</strong> - User who locked the environment.</p>
+
+<p><strong>message</strong><br><em>Optional</em> <strong>string</strong> - Description of why the environment has been locked.</p>
+
+<pre><code>{
+  "user": "mwarkentin",
+  "message": "Testing CDN"
+}
+</code></pre>
+
+<h4>Successful response</h4>
+
+<p>Status <strong>200 OK</strong></p>
+
+<pre><code>{
+  'environment': 'acct-dev', 
+  'owner': 'mwarkentin', 
+  'message': 'Testing CDN', 
+  'since': '2012-09-03 16:10:29.165004'
+}
+</code></pre>
+
+<h4>Already locked response</h4>
+
+<p>Status <strong>409 Conflict</strong></p>
+
+<h3>Unlock an environment</h3>
+
+<pre><code>DELETE /locks/:environment/
+</code></pre>
+
+<h4>Successful response</h4>
+
+<p>Status <strong>200 OK</strong></p>
+
+<h4>Already unlocked response</h4>
+
+<p>Status <strong>404 Not Found</strong></p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Gatekeeper maintained by <a href="https://github.com/mwarkentin">mwarkentin</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
