@@ -10,7 +10,7 @@ from decorators import token_required
 
 app = Flask(__name__)
 
-redis = StrictRedis.from_url(os.getenv('REDIS_URL'))
+redis = StrictRedis.from_url(os.getenv('REDIS_URL', 'redis://localhost:6379'))
 
 stream_handler = logging.StreamHandler()
 stream_handler.setLevel(logging.DEBUG)
